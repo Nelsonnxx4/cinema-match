@@ -1,28 +1,42 @@
-"""Error handling utilities for Group 17.
+"""Centralized error handling for CinemaMatch.
 
-Responsibility: Oryiman Orhembetyoga
-
-Purpose:
-- Handle API failures, invalid user input, missing files, and network issues.
-- Prevent the app from crashing during runtime.
-- Return user-friendly messages and safe fallback behavior.
-
-Expected flow:
-1. A module raises or catches a problem.
-2. This layer converts the issue into a clear message.
-3. The UI can inform the user without breaking the flow.
-
-Recommended functions:
-- handle_api_error(error: Exception) -> str
-- handle_file_error(error: Exception) -> str
-- handle_validation_error(message: str) -> str
-
-Important notes:
-- Error handling must be consistent across the app.
-- Keep messages understandable to non-technical users.
-- Prefer graceful fallback behavior over terminal exceptions.
+This module defines app-specific exceptions and converts technical errors into
+user-friendly messages.
 """
 
-# NOTE FOR TEAM:
-# This module is not a feature by itself; it supports the whole app.
-# Every feature should use it when a request, file, or API call may fail.
+from __future__ import annotations
+
+import json
+
+
+class CinemaMatchError(Exception):
+  pass
+
+class ValidationError(CinemaMatchError):
+  pass
+
+class APIError(CinemaMatchError):
+  pass
+
+
+class StorageError(CinemaMatchError):
+  pass
+
+def handle_api_error(error: Exception) -> str:
+    if isinstance(error, TimeoutError):
+        return "The movie service is taking too long. Please try again."
+    if isinstance(error, ConnectionError):
+        return "The movie service is temporarily unavailable."
+    return "We couldn't load movie data right now. Please try again later."
+
+
+def handle_file_error(error: Exception) -> str:
+    if isinstance(error, FileNotFoundError):
+        return "Saved data could not be found. A new file will be created."
+    if isinstance(error, json.JSONDecodeError):
+        return "Saved data is damaged and needs to be reset."
+    return "There was a problem reading your saved data."
+
+
+def handle_validation_error(message: str) -> str:
+    return f"Invalid input: {message}"
