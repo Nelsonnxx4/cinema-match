@@ -27,3 +27,58 @@ Important notes:
 # This module owns the user preference state.
 # Keep the schema stable so other modules do not break when reading saved data.
 # A preference should be simple: a list of genres or a JSON object with genres.
+
+from __future__ import annotations
+
+from pathlib import Path
+
+from src.errors import StorageError
+from src.storage import read_json_file, write_json_file
+from src.validation import normalize_genre_list
+
+
+PREFERENCE_FILE = str(
+    Path(__file__).resolve().parent.parent / "data" / "preference.json"
+)
+DEFAULT_PREFERENCES = {"genres": []}
+
+
+def save_preferences(genres: list[str], path: str = PREFERENCE_FILE) -> None:
+    """Validate and save the user's preferred genres."""
+    normalized_genres = normalize_genre_list(genres)
+    write_json_file(path, {"genres": normalized_genres})
+
+
+def load_preferences(path: str = PREFERENCE_FILE) -> list[str]:
+    """Load the user's saved preferred genres."""
+    data = read_json_file(path, DEFAULT_PREFERENCES)
+
+    if isinstance(data, list):
+        return normalize_genre_list(data)
+
+    if not isinstance(data, dict):
+        raise StorageError("Preference data must be a JSON object.")
+
+    genres = data.get("genres", [])
+    if not genres:
+        return []
+
+    if not isinstance(genres, list):
+        raise StorageError("Preference genres must be saved as a list.")
+
+    return normalize_genre_list(genres)
+
+
+def update_preferences(new_genres: list[str], path: str = PREFERENCE_FILE) -> list[str]:
+    """Add new genres to the saved preferences and return the updated list."""
+    saved_genres = load_preferences(path)
+    combined_genres = saved_genres + new_genres
+    normalized_genres = normalize_genre_list(combined_genres)
+
+    write_json_file(path, {"genres": normalized_genres})
+    return normalized_genres
+
+
+def clear_preferences(path: str = PREFERENCE_FILE) -> None:
+    """Reset the saved preferences to an empty genre list."""
+    write_json_file(path, DEFAULT_PREFERENCES)

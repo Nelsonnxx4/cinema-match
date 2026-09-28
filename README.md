@@ -27,6 +27,34 @@ The project aims to simplify movie selection by combining user preferences, exte
 - pytest
 - Git and GitHub
 
+## Setup
+
+1. Create a `.env` file from `.env.example`.
+2. Add your API keys:
+
+```env
+TMDB_API_KEY=your_tmdb_key
+GEMINI_API_KEY=your_gemini_key
+```
+
+3. Install the requirements:
+
+```bash
+pip install -r requirements.txt
+```
+
+4. Run the app:
+
+```bash
+streamlit run app.py
+```
+
+5. Run tests:
+
+```bash
+python -m pytest -q
+```
+
 ```mermaid
 flowchart LR
 A[User selects genres] --> B[Validate input]
