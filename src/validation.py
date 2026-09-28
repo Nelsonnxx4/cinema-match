@@ -14,7 +14,7 @@ from errors import ValidationError
 
 Genre_Pattern = re.compile(r"^[a-zA-Z\s\-]+$")
 
-Search_Parren = re.compile(r"^[a-zA-Z0-9\s\-':]+$")
+Search_Pattern = re.compile(r"^[a-zA-Z0-9\s\-':]+$")
 
 Search_Max_Length = 100
 
@@ -22,7 +22,7 @@ Search_Max_Length = 100
 
 Valid_Genres = {"Action","Adventure","Animation","Comedy","Crime","Documentry","Drama","Family","Fantasy","History","Horror","Music","Mystery","Romance","Science Fiction","Sci-Fi","Tv Movie","Thriller","War","Western",}
 
-def clear_text(value: str) -> bool:
+def clean_text(value: str) -> bool:
     if not isinstance(value, str):
         return""
 
@@ -31,10 +31,44 @@ def clear_text(value: str) -> bool:
 
 #check if a gene is a recognized genre.
 def validate_genre(value: str) -> bool:
-    cleaned = clear_text(value)
+    cleaned = clean_text(value)
     if not cleaned:
         return False 
     if not Genre_Pattern.fullmatch(cleaned):
         return False
     return cleaned.title() in Valid_Genres
 
+def validate_movie_search(query: str) -> str:
+#Validates and cleans a movie search term.
+    cleaned = clean_text(query)
+ 
+    if not cleaned:
+        raise ValidationError("Search query cannot be empty.")
+ 
+    if len(cleaned) > Search_Max_Length:
+        raise ValidationError(
+            f"Search query is too long (max {Search_Max_Length} characters)."
+        )
+ 
+    if not Search_Pattern.fullmatch(cleaned):
+        raise ValidationError("Search query contains invalid characters.")
+ 
+    return cleaned
+
+def normalize_genre_list(genres: list[str]) -> list[str]:
+#Cleans a list of genres, discards invalid/unrecognized/empty values
+    
+    if not isinstance(genres, list):
+        return []
+ 
+    normalized = []
+    seen = set()
+ 
+    for item in genres:
+        cleaned = clean_text(item).title()
+        if cleaned and validate_genre(cleaned):
+            if cleaned not in seen:
+                seen.add(cleaned)
+                normalized.append(cleaned)
+ 
+    return normalized
