@@ -54,12 +54,19 @@ def get_default_data(path: str) -> JsonData:
     return deepcopy(DEFAULT_DATA_BY_FILE.get(file_name, {}))
 
 
-def ensure_storage_file(path: str, default_data: JsonData | None = None) -> None:
+def ensure_storage_file(
+    path: str,
+    default_data: JsonData | None = None,
+) -> None:
     """Create a JSON storage file if it is missing, empty, or invalid."""
     storage_path = Path(path)
-    data_to_write = default_data if default_data is not None else get_default_data(path)
+    data_to_write = (
+        default_data
+        if default_data is not None
+        else get_default_data(path)
+    )
 
-          try:
+    try:
         storage_path.parent.mkdir(parents=True, exist_ok=True)
 
         if not storage_path.exists() or storage_path.stat().st_size == 0:
@@ -79,15 +86,20 @@ def ensure_storage_file(path: str, default_data: JsonData | None = None) -> None
         raise StorageError(handle_file_error(error)) from error
 
 
-def read_json_file(path: str, default_data: JsonData | None = None) -> JsonData:
+def read_json_file(
+    path: str,
+    default_data: JsonData | None = None,
+) -> JsonData:
     """Read JSON data safely from a local file."""
     ensure_storage_file(path, default_data)
 
     try:
         with Path(path).open("r", encoding="utf-8") as file:
             data = json.load(file)
+
     except json.JSONDecodeError as error:
         raise StorageError(handle_file_error(error)) from error
+
     except OSError as error:
         raise StorageError(handle_file_error(error)) from error
 
@@ -103,7 +115,9 @@ def write_json_file(path: str, data: JsonData) -> None:
         raise StorageError("Only dictionaries and lists can be saved as JSON.")
 
     storage_path = Path(path)
-    temporary_path = storage_path.with_suffix(storage_path.suffix + ".tmp")
+    temporary_path = storage_path.with_suffix(
+        storage_path.suffix + ".tmp"
+    )
 
     try:
         storage_path.parent.mkdir(parents=True, exist_ok=True)
