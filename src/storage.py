@@ -59,21 +59,21 @@ def ensure_storage_file(path: str, default_data: JsonData | None = None) -> None
     storage_path = Path(path)
     data_to_write = default_data if default_data is not None else get_default_data(path)
 
-    try:
+        try:
         storage_path.parent.mkdir(parents=True, exist_ok=True)
 
-        if not storage_path.exists() or storage_path.stat().st_size == 0:
-            write_json_file(path, data_to_write)
-            return
+        with temporary_path.open("w", encoding="utf-8") as file:
+            json.dump(data, file, indent=2)
+            file.write("\n")
 
-        with storage_path.open("r", encoding="utf-8") as file:
-            saved_data = json.load(file)
+        os.replace(temporary_path, storage_path)
 
-        if not isinstance(saved_data, (dict, list)):
-            write_json_file(path, data_to_write)
-    except json.JSONDecodeError:
-        write_json_file(path, data_to_write)
+    except (TypeError, ValueError) as error:
+        temporary_path.unlink(missing_ok=True)
+        raise StorageError(handle_file_error(error)) from error
+
     except OSError as error:
+        temporary_path.unlink(missing_ok=True)
         raise StorageError(handle_file_error(error)) from error
 
 
