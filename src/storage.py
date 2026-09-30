@@ -84,27 +84,6 @@ def ensure_storage_file(
 
     except OSError as error:
         raise StorageError(handle_file_error(error)) from error
-            write_json_file(path, data_to_write)
-
-    except json.JSONDecodeError:
-        write_json_file(path, data_to_write)
-
-    except OSError as error:
-        raise StorageError(handle_file_error(error)) from error
-            write_json_file(path, data_to_write)
-
-    except json.JSONDecodeError:
-        write_json_file(path, data_to_write)
-
-    except OSError as error:
-        raise StorageError(handle_file_error(error)) from error
-            write_json_file(path, data_to_write)
-
-    except json.JSONDecodeError:
-        write_json_file(path, data_to_write)
-
-    except OSError as error:
-        raise StorageError(handle_file_error(error)) from error
 
 
 def read_json_file(
