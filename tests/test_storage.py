@@ -44,3 +44,14 @@ def test_write_json_file_rejects_non_json_root_values(tmp_path):
 
     with pytest.raises(StorageError, match="Only dictionaries and lists"):
         write_json_file(str(path), "not valid")
+
+def test_write_json_file_rejects_non_serializable_values(tmp_path):
+    path = tmp_path / "watchlist.json"
+
+    with pytest.raises(
+        StorageError,
+        match="cannot be stored as JSON",
+    ):
+        write_json_file(str(path), {"movie_ids": {1, 2, 3}})
+
+    assert not path.with_suffix(".json.tmp").exists()
