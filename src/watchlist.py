@@ -1,6 +1,5 @@
 """Movie watchlist and watched-list module for Group 17.
 
-Responsibility: Muhammad Hassan
 
 Purpose:
 - Manage movie results and movie details for user interaction.

@@ -1,7 +1,4 @@
-"""AI recommendation module for Group 17.
-
-Responsibility: Ayebaebi Moses
-
+"""
 Purpose:
 - Use Gemini AI to provide personalized movie suggestions.
 - Build a recommendation prompt from the user's preferences and saved movie context.

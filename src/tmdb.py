@@ -1,7 +1,5 @@
 """TMDB API integration guide for Group 17.
 
-Responsibility: Shalom Balogun
-
 Purpose:
 - Fetch movie recommendations from the TMDB API.
 - Retrieve movie details for a selected title.
