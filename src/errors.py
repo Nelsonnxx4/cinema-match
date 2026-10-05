@@ -35,8 +35,9 @@ def handle_file_error(error: Exception) -> str:
         return "Saved data could not be found. A new file will be created."
     if isinstance(error, json.JSONDecodeError):
         return "Saved data is damaged and needs to be reset."
+    if isinstance(error, (TypeError, ValueError)):
+        return "Saved data contains values that cannot be stored as JSON."
     return "There was a problem reading your saved data."
-
-
+  
 def handle_validation_error(message: str) -> str:
     return f"Invalid input: {message}"

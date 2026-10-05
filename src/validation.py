@@ -8,7 +8,7 @@ Purpose:
 - Reuse common validation functions across the app to reduce bugs.
 """
 import re
-from errors import ValidationError
+from src.errors import ValidationError
 
 #regex patterns
 
