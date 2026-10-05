@@ -23,10 +23,6 @@ Important notes:
 - Return predictable dictionaries so the UI and other modules can consume them.
 """
 
-# NOTE FOR TEAM:
-# This module should not contain UI logic or storage logic.
-# It should only deal with external API calls and response formatting.
-# If TMDB fails, return a helpful error message instead of crashing the app.
 
 from __future__ import annotations
 
