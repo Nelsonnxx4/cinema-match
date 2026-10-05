@@ -28,77 +28,6 @@ st.set_page_config(
     layout="wide",
 )
 
-
-def apply_theme(dark_mode: bool) -> None:
-    if dark_mode:
-        background = "#0f1218"
-        panel = "#171b24"
-        sidebar = "#121620"
-        text = "#f3f4f6"
-        muted = "#a7b0c0"
-        border = "#2b3240"
-        accent = "#35c2a3"
-    else:
-        background = "#f6f7f9"
-        panel = "#ffffff"
-        sidebar = "#eef2f6"
-        text = "#111827"
-        muted = "#5f6b7a"
-        border = "#d7dde6"
-        accent = "#0f8f7a"
-
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background: {background};
-            color: {text};
-        }}
-        [data-testid="stSidebar"] {{
-            background: {sidebar};
-        }}
-        h1, h2, h3, h4, h5, h6, p, label, span {{
-            color: {text};
-        }}
-        .cinema-muted {{
-            color: {muted};
-            font-size: 0.92rem;
-        }}
-        .cinema-pill {{
-            display: inline-block;
-            border: 1px solid {border};
-            border-radius: 999px;
-            color: {text};
-            padding: 0.15rem 0.55rem;
-            margin: 0.1rem 0.2rem 0.1rem 0;
-            font-size: 0.8rem;
-        }}
-        .poster-placeholder {{
-            aspect-ratio: 2 / 3;
-            border: 1px solid {border};
-            border-radius: 8px;
-            background: {panel};
-            color: {muted};
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 210px;
-        }}
-        div[data-testid="stButton"] > button {{
-            border-radius: 8px;
-            border-color: {border};
-        }}
-        div[data-testid="stButton"] > button[kind="primary"] {{
-            background: {accent};
-            border-color: {accent};
-            color: #ffffff;
-        }}
-        </style>
-        """,
-        unsafe_allow_html=True,
-    )
-
-
 def get_key(name: str, typed_value: str) -> str | None:
     if typed_value.strip():
         return typed_value.strip()
@@ -126,8 +55,7 @@ def render_genres(genres: list[str]) -> None:
     if not genres:
         return
 
-    genre_html = "".join(f"<span class='cinema-pill'>{genre}</span>" for genre in genres)
-    st.markdown(genre_html, unsafe_allow_html=True)
+    st.caption("Genres: " + ", ".join(genres))
 
 
 def render_movie_card(
@@ -144,12 +72,9 @@ def render_movie_card(
         with poster_column:
             poster_url = movie.get("poster_url")
             if poster_url:
-                st.image(poster_url, use_container_width=True)
+                st.image(poster_url, width="stretch")
             else:
-                st.markdown(
-                    "<div class='poster-placeholder'>No poster</div>",
-                    unsafe_allow_html=True,
-                )
+                st.write("No poster")
 
         with content_column:
             title = movie.get("title", "Untitled")
@@ -163,10 +88,7 @@ def render_movie_card(
             if overview:
                 st.write(overview)
             else:
-                st.markdown(
-                    "<p class='cinema-muted'>No overview available.</p>",
-                    unsafe_allow_html=True,
-                )
+                st.write("No overview available.")
 
             details_column, save_column, watched_column, remove_column = st.columns(4)
 
@@ -375,12 +297,9 @@ def render_selected_movie_details(tmdb_api_key: str | None) -> None:
     with left_column:
         poster_url = details.get("poster_url")
         if poster_url:
-            st.image(poster_url, use_container_width=True)
+            st.image(poster_url, width="stretch")
         else:
-            st.markdown(
-                "<div class='poster-placeholder'>No poster</div>",
-                unsafe_allow_html=True,
-            )
+            st.write("No poster")
 
     with right_column:
         title = details.get("title", "Untitled")
@@ -429,10 +348,6 @@ def main() -> None:
 
     with st.sidebar:
         st.header("Settings")
-        dark_mode = st.toggle("Dark mode", value=st.session_state.get("dark_mode", False))
-        st.session_state["dark_mode"] = dark_mode
-
-        st.divider()
         tmdb_input = st.text_input(
             "TMDB API key",
             type="password",
@@ -453,8 +368,6 @@ def main() -> None:
         st.divider()
         st.caption(f"TMDB: {'ready' if tmdb_api_key else 'missing'}")
         st.caption(f"Gemini: {'ready' if gemini_api_key else 'missing'}")
-
-    apply_theme(st.session_state["dark_mode"])
 
     st.title("CinemaMatch")
 

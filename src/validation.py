@@ -18,9 +18,31 @@ Search_Pattern = re.compile(r"^[a-zA-Z0-9\s\-':]+$")
 
 Search_Max_Length = 100
 
-#approved genres
+# approved genres
 
-Valid_Genres = {"Action","Adventure","Animation","Comedy","Crime","Documentry","Drama","Family","Fantasy","History","Horror","Music","Mystery","Romance","Science Fiction","Sci-Fi","Tv Movie","Thriller","War","Western",}
+VALID_GENRES = (
+    "Action",
+    "Adventure",
+    "Animation",
+    "Comedy",
+    "Crime",
+    "Documentary",
+    "Drama",
+    "Family",
+    "Fantasy",
+    "History",
+    "Horror",
+    "Music",
+    "Mystery",
+    "Romance",
+    "Science Fiction",
+    "TV Movie",
+    "Thriller",
+    "War",
+    "Western",
+)
+
+Valid_Genres = set(VALID_GENRES) | {"Documentry", "Sci-Fi", "Tv Movie"}
 
 def clean_text(value: str) -> bool:
     if not isinstance(value, str):
