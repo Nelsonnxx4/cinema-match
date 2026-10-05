@@ -1,8 +1,6 @@
-"""TMDB API integration guide for Group 17.
 
-Responsibility: Shalom Balogun
 
-Purpose:
+""" Purpose:
 - Fetch movie recommendations from the TMDB API.
 - Retrieve movie details for a selected title.
 - Convert raw API responses into a clean format the rest of the app can use.

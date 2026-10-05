@@ -171,7 +171,7 @@ with st.sidebar:
 
 saved_genres, watchlist, watched_movies = load_app_data()
 
-st.title("CinemaMatch")
+st.title("CinemaMatch🎥")
 m1, m2, m3 = st.columns(3)
 m1.metric("Saved Genres", len(saved_genres))
 m2.metric("Watchlist", len(watchlist))
