@@ -1,4 +1,4 @@
-from _future_ import annotations
+from __future__ import annotations
 
 from pathlib import Path
 from typing import Any
@@ -8,7 +8,7 @@ from src.storage import read_json_file, write_json_file
 from src.validation import clean_text
 
 
-DATA_DIR = Path(_file_).resolve().parent.parent / "data"
+DATA_DIR = Path(__file__).resolve().parent.parent / "data"
 WATCHLIST_FILE = str(DATA_DIR / "watchlist.json")
 WATCHED_FILE = str(DATA_DIR / "watched.json")
 
